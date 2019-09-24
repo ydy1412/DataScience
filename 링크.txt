@@ -10,3 +10,5 @@ https://www.kaggle.com/russellyates88/suicide-rates-overview-1985-to-2016#master
 
 # Developer info
 https://www.kaggle.com/stackoverflow/so-survey-2017#survey_results_public.csv
+
+new data

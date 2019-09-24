@@ -1,0 +1,12 @@
+https://www.kaggle.com/wkirgsn/electric-motor-temperature => predicting motor temperator
+https://www.kaggle.com/noaa/noaa-icoads => 기후변화 데이터
+
+# 유튜브 데이터
+https://www.kaggle.com/datasnaek/youtube-new#KR_category_id.json
+https://www.kaggle.com/datasnaek/youtube-new#KRvideos.csv
+
+# 자살율
+https://www.kaggle.com/russellyates88/suicide-rates-overview-1985-to-2016#master.csv
+
+# Developer info
+https://www.kaggle.com/stackoverflow/so-survey-2017#survey_results_public.csv

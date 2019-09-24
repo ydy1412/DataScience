@@ -1,6 +1,18 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import matplotlib.font_manager as fm
+import matplotlib as mpl
+import os
+import pickle
+import plotly
+import matplotlib.gridspec as gridspec
+
+
+
 def Hot_encoding(DataFrame, Column_name, sep='; ', dropna=True, threading=False, df_dict=None):
     item_set = set()
-
     def Unique_element_in_series(item):
         if item is np.nan:
             pass
@@ -13,30 +25,22 @@ def Hot_encoding(DataFrame, Column_name, sep='; ', dropna=True, threading=False,
         Column_series.apply(Unique_element_in_series)
     else:
         Column_series = DataFrame[Column_name]
-
-    New_dict = dict()
-    for i in item_set:
-        New_dict[i] = np.zeros(Column_series.shape)
-    Hot_encoded_df = pd.DataFrame(data=New_dict, index=Column_series.index, dtype=np.int8, )
-    for i in tqdm_notebook(Column_series.index):
+    print(Column_series.shape[0])
+    print(len(item_set))
+    Hot_encoded_df = pd.DataFrame(data=np.zeros((Column_series.shape[0],len(item_set))), index=Column_series.index, columns=item_set, dtype=np.int8, )
+    for i in Column_series.index:
         item_list = Column_series.loc[i].split(sep)
         for item in item_list:
             Hot_encoded_df[item].loc[i] = 1
-    if threading == True:
-        df_list[Column_name] = Hot_encoded_df
-    else:
-        return Hot_encoded_df
+    return Hot_encoded_df
 
 
-def Hot_encoding_multi_threading(DataFrame, Column_names, sep='; ', dropna=True, df_dict=None):
-    from threading import Thread
-    threads = []
+def Hot_encoding_multi_processing(DataFrame, Column_names, sep='; ', dropna=True, df_dict=None,time_out = 1):
+    from multiprocessing import Pool
+    pool = Pool(processes=3)
     for Column_name in Column_names:
-        threads.append(
-            Thread(target=Hot_encoding, args=(DataFrame, Column_name,),
-                   kwargs={"threading": True, "df_dict": df_dict}))
-    for thread in threads:
-        thread.start()
+        result = pool.apply_async(Hot_encoding, args=(DataFrame, Column_name,))
+        df_dict[Column_name] = result.get(timeout=time_out)
     return df_dict
 
 
@@ -104,3 +108,12 @@ def plot_bar_chart_about_language_per_dev(Dict, Type, labels):
                              marker=dict(color=color, line=dict(color='rgb(8,48,107)', width=1.5), opacity=0.6)))
     fig.update_layout(barmode='stack')
     fig.show()
+
+
+Public_2017_directory = 'C:/team_project_data/2017_public.csv'
+Public_2018_directory = 'C:/team_project_data/2018_public.csv'
+Public_2017_data = pd.read_csv(Public_2017_directory)
+Column_names = ['ProgramHobby','ProblemSolving','BuildingThings']
+df_dict = dict()
+df = Hot_encoding(Public_2017_data,'HaveWorkedLanguage')
+#df_dict = Hot_encoding_multi_processing(Public_2017_data,Column_names,df_dict = df_dict,time_out = 1000)
